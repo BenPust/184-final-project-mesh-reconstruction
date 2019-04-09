@@ -3,10 +3,17 @@ title: "3D Mesh Reconstruction"
 ---
 
 ## Title, Summary and Team Members
-- Provide us a descriptive title, 2-3 sentences that summarize your project, and list your three team members.
+[x] Provide us a descriptive title, 2-3 sentences that summarize your project, and list your three team members.
+
+Sejal Popat, Merlin Shi, Benjamin Pust
+
+We are going to implement part of the pipeline described in 3DCapture: 3D Reconstruction for a Smartphone, which takes a TSDF point cloud and uses this to reconstruct a textured mesh. 
+
 
 ## Problem Description
-- Here you should provide the context for your idea. Describe the problem that you are trying to solve, why it is important, where it is challenging. Give us a general idea on how you are going to solve it.
+[x] Here you should provide the context for your idea. Describe the problem that you are trying to solve, why it is important, where it is challenging. Give us a general idea on how you are going to solve it.
+
+
 
 ## Goals and Deliverables
 - This is the most important part of your proposal. You should carefully think through what you are trying to accomplish, what results you are going for, and why you think you can accomplish those goals. For example:
