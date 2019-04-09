@@ -11,12 +11,12 @@ title: "3D Mesh Reconstruction"
 We are going to implement part of the pipeline described in 3DCapture: 3D Reconstruction for a Smartphone, which takes a TSDF point cloud and uses this to reconstruct a textured mesh. 
 
 **Why is it important:** With the ability to construct polygonal mesh from point cloud, we can manipulate the geometry and overlay various textures. This allows us to create artistic images based on the images we take.
-**What are the challenges: **
 
+**What are the challenges:**
 
 ## Goals and Deliverables
 **Baseline Deliverable:** Given TSDF point cloud, reconstruct 3D polygonal mesh, and then do texture mapping to build a textured mesh.
-Mesh Reconstruction:
+- Mesh Reconstruction:
 - Texture Mapping: BEN
 
 **Reach Deliverable:** If we have time our reach goal would be to implement one or two of the previous/later steps in the pipeline:
