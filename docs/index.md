@@ -2,10 +2,7 @@
 title: "3D Mesh Reconstruction"
 ---
 
-## Title, Summary and Team Members
-[x] Provide us a descriptive title, 2-3 sentences that summarize your project, and list your three team members.
-
-Sejal Popat, Merlin Shi, Benjamin Pust
+### Sejal Popat, Merlin Shi, Benjamin Pust
 
 We are going to implement part of the pipeline described in 3DCapture: 3D Reconstruction for a Smartphone, which takes a TSDF point cloud and uses this to reconstruct a textured mesh. 
 
@@ -26,5 +23,24 @@ We are going to implement part of the pipeline described in 3DCapture: 3D Recons
 ## Schedule
 - In this section you should organize and plan the tasks and subtasks that your team will execute. Since presentations are ~4 weeks from the due-date of the proposal, you should include a set of tasks for every week.
 
+**April 30 (Graded Milestone due):**
+- Mesh Reconstruction from point cloud
+- At least part of texture mapping
+
+**May 9 (Final Presentation):**
+
+**May 14 (Final Deliverables due):**
+- Reach Goals (if possible)
+
+
 ## Resources
 - List what resources, e.g. books, papers and/or online resources that are references for your project. List the computing platform, hardware and software resources that you will use for your project. You have a wide latitude here to use what you have access to, but be aware that you will have to support and trouble-shoot on your platform yourselves. If you are starting from an existing piece of code or system, describe and provide a pointer to it here.
+
+Papers:
+- [3DCapture: 3D Reconstruction for a Smartphone](http://openaccess.thecvf.com/content_cvpr_2016_workshops/w14/papers/Muratov_3DCapture_3D_Reconstruction_CVPR_2016_paper.pdf)
+- Unconstrained Isosurface Extraction on Arbitrary Octrees
+- Tanks and Temples: Benchmarking Large-Scale Scene Reconstruction
+
+
+Software: 
+- COLMAP
