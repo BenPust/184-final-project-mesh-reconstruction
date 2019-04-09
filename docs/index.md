@@ -1,3 +1,7 @@
+---
+title: "3D Mesh Reconstruction"
+---
+
 ## Title, Summary and Team Members
 - Provide us a descriptive title, 2-3 sentences that summarize your project, and list your three team members.
 
