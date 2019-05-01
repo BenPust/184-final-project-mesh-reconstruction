@@ -201,8 +201,6 @@ namespace CGL {
 
 class PointCloudNode {
 public:
-  // I think this just has to wrap the pointCloud and nothing else in
-  // this case...
   
   PointCloud point_cloud;
   
