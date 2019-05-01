@@ -184,6 +184,10 @@ namespace CGL {
 
   void MeshEdit::draw_meshes()
   {
+    // TODO: Improve flow of control, maybe by setting up flags or MeshEdit class variables.
+    for( vector<PointCloudNode>::iterator n = pointCloudNodes.begin(); n != pointCloudNodes.end(); n++) {
+      renderPoints( n->point_cloud );
+    }
     for( vector<MeshNode>::iterator n = meshNodes.begin(); n != meshNodes.end(); n++ )
     {
       renderMesh( n->mesh );
@@ -1244,6 +1248,19 @@ namespace CGL {
   {
     // FIXME? : Incorporate antialiasing.
     glColor3f(c.r, c.g, c.b);
+  }
+
+  void MeshEdit::renderPoints( PointCloud& point_cloud )
+  {
+    std::vector<Vector3D> vertices = point_cloud.vertices;
+    DrawStyle *style = &defaultStyle;
+    setColor(style->vertexColor);
+    glPointSize(style->vertexRadius);
+    for (Vector3D v : vertices) {
+      glBegin(GL_POINTS);
+      glVertex3d(v.x, v.y, v.z);
+      glEnd();
+    }
   }
 
   void MeshEdit::renderMesh( HalfedgeMesh& mesh )
