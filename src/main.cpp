@@ -7,12 +7,63 @@
 #include "mergeVertices.h"
 #include "shaderUtils.h"
 
+
 #include <iostream>
 
 using namespace std;
 using namespace CGL;
 
 #define msg(s) cerr << "[Collada Viewer] " << s << endl;
+
+// TODO: move this later
+namespace CGL {
+  
+  struct PointCloud: Instance {
+    std::string id;
+    std::string name;
+    
+    std::vector<Vector3D> vertices;
+    std::vector<Vector3D> normals;
+  };
+  
+}
+
+int parsePly(const char *path, vector<Vector3D> *vertices) {
+  FILE* file = fopen(path, "r");
+  int vertex_count = 0;
+  int face_count = 0;
+  
+  char lineHeader[512];
+  while (true) {
+    int res = fscanf(file, "%s", lineHeader);
+    
+    if (res == EOF || strcmp(lineHeader, "end_header") == 0) {
+      break;
+    }
+    
+    if (strcmp(lineHeader, "element") == 0) {
+      char type[128];
+      int count;
+      
+      fscanf(file, "%s %d\n", type, &count);
+      if (strcmp(type, "vertex") == 0)
+        vertex_count = count;
+      
+      if (strcmp(type, "face") == 0)
+        face_count = count;
+    }
+  }
+  
+  cout << "ply parsing\nVertex count: " << vertex_count << "\nFace count: " << face_count << endl;
+  
+  while (--vertex_count >= 0) {
+    Vector3D vertex;
+    fscanf(file, "%lf %lf %lf\n", &vertex.x, &vertex.y, &vertex.z);
+    vertices->push_back(vertex);
+  }
+  
+  return 1;
+}
 
 int loadFile(MeshEdit* collada_viewer, const char* path) {
 
@@ -49,6 +100,35 @@ int loadFile(MeshEdit* collada_viewer, const char* path) {
 
     mesh->type = POLYMESH;
     node.instance = mesh;
+    scene->nodes.push_back(node);
+  }
+
+  else if (path_str.substr(path_str.length()-4, 4) == ".ply") {
+    vector<Vector3D> vertices = vector<Vector3D>();
+    
+    parsePly(path, &vertices);
+    
+    Camera* cam = new Camera();
+    cam->type = CAMERA;
+    Node node;
+    node.instance = cam;
+    scene->nodes.push_back(node);
+    PointCloud* point_cloud = new PointCloud();
+    Polymesh *polymesh = new Polymesh();
+    
+    // Add vertices to scene
+    for (Vector3D v : vertices) {
+      point_cloud->vertices.push_back(v);
+      polymesh->vertices.push_back(v);
+    }
+    
+    // Add polygons to scene
+//    for (Polygon p : out_polygons) {
+//      polymesh->polygons.push_back(p);
+//    }
+    
+    point_cloud->type = POINT_CLOUD;
+    node.instance = point_cloud;
     scene->nodes.push_back(node);
   }
   else
