@@ -13,6 +13,7 @@
 #include "material.h"
 #include "halfEdgeMesh.h"
 #include "student_code.h"
+#include "pointCloud.h"
 
 #include <string>
 #include <iostream>
@@ -198,6 +199,30 @@ namespace CGL {
    };// class MeshNode.
 
 
+class PointCloudNode {
+public:
+  // I think this just has to wrap the pointCloud and nothing else in
+  // this case...
+  
+  PointCloud point_cloud;
+  
+  PointCloudNode(PointCloud& pointCloud) {
+    pointCloud = pointCloud;
+  }
+  
+  ~PointCloudNode() {
+  }
+  
+  /* Returns the lower and upper corners of the axis aligned
+   * bounding box for the mesh
+   */
+  void getBounds(Vector3D& low, Vector3D& high);
+  
+  // Centroid / weighted average point.
+  void getCentroid(Vector3D& centroid);
+  
+}; // class PointCloudNode
+  
 // The viewer class the manages the viewing and rendering of Collada Files.
 class MeshEdit : public Renderer {
  public:
@@ -227,6 +252,7 @@ class MeshEdit : public Renderer {
   Scene* scene;
 
   vector<MeshNode> meshNodes;
+  vector<PointCloudNode> pointCloudNodes;
 
   // View Frustrum Variables.
   float hfov; // FIXME : I would like to specify the view frustrum
@@ -270,6 +296,7 @@ class MeshEdit : public Renderer {
   void init_light    (Light& light       );
   void init_polymesh (Polymesh& polymesh );
   void init_material (Material& material );
+  void init_point_cloud(PointCloud& pointcloud);
 
   // Control functions.
   void update_camera();

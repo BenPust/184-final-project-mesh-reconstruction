@@ -324,7 +324,7 @@ namespace CGL {
 
   void MeshEdit::scroll_event( float offset_x, float offset_y )
   {
-
+    
     if(offset_y > 0)
     {
       view_distance -= offset_y*(view_distance/4);
@@ -426,6 +426,9 @@ namespace CGL {
         case MATERIAL:
           init_material(static_cast<Material&>(*instance));
           break;
+        case POINT_CLOUD:
+          init_point_cloud(static_cast<PointCloud&> (*instance));
+          break;
       }
 
     }
@@ -433,6 +436,31 @@ namespace CGL {
     cerr << "Done loading scene. Mesh Ready for Editing!" << endl;
   }
 
+  void MeshEdit::init_point_cloud(PointCloud& point_cloud)
+  {
+    PointCloudNode pointCloudNode(point_cloud);
+    pointCloudNode.point_cloud = point_cloud;
+    pointCloudNodes.push_back(pointCloudNode);
+    
+    // Ensure that the current selection always has a valid mesh pointer.
+    // selectedFeature.node = &pointCloudNode;
+    
+    Vector3D low, high;
+    pointCloudNode.getBounds(low, high);
+    
+    Vector3D centroid;
+    pointCloudNode.getCentroid(centroid);
+    
+    canonical_view_distance = (high - low).norm()*1.01;
+    min_view_distance = canonical_view_distance / 10.0;
+    view_distance = canonical_view_distance * 2.;
+    max_view_distance = canonical_view_distance * 20.;
+    
+    camera_angles = Vector3D(0., 0., 0.);
+    view_focus = centroid;
+    up = Z_UP;
+  }
+  
   void MeshEdit::init_camera(Camera& camera)
   {
     hfov = camera.hfov;
@@ -1424,6 +1452,27 @@ namespace CGL {
 
     glEnable( GL_DEPTH_TEST );
   }
+  
+  void PointCloudNode::getBounds(Vector3D& low, Vector3D& high) {
+    double maxValue = numeric_limits<double>::max();
+    
+    low.x = maxValue;
+    high.x = -maxValue;
+    low.y = maxValue;
+    high.y = -maxValue;
+    low.z = maxValue;
+    high.z = -maxValue;
+    
+    for (Vector3D v : point_cloud.vertices) {
+      low.x = min(low.x, v.x);
+      low.y = min(low.y, v.y);
+      low.z = min(low.z, v.z);
+      
+      high.x = max(high.x, v.x);
+      high.y = max(high.y, v.y);
+      high.z = max(high.z, v.z);
+    }
+  }
 
   void MeshNode::getBounds( Vector3D& low, Vector3D& high )
   {
@@ -1458,6 +1507,16 @@ namespace CGL {
     }
 
     centroid /= (double) mesh.nVertices();
+  }
+  
+  void PointCloudNode::getCentroid(Vector3D& centroid) {
+    centroid = Vector3D(0., 0., 0.);
+    
+    for (Vector3D v : point_cloud.vertices) {
+      centroid += v;
+    }
+    
+    centroid /= (double) point_cloud.vertices.size();
   }
 
   /*

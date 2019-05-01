@@ -35,6 +35,7 @@ set(COLLADA_VIEWER_HEADER
     shaderUtils.h
     mergeVertices.h
     png.h
+    pointCloud.h
 )
 
 

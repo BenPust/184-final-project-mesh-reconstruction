@@ -6,7 +6,7 @@
 #include "bezierCurve.h"
 #include "mergeVertices.h"
 #include "shaderUtils.h"
-
+#include "pointCloud.h"
 
 #include <iostream>
 
@@ -14,19 +14,6 @@ using namespace std;
 using namespace CGL;
 
 #define msg(s) cerr << "[Collada Viewer] " << s << endl;
-
-// TODO: move this later
-namespace CGL {
-  
-  struct PointCloud: Instance {
-    std::string id;
-    std::string name;
-    
-    std::vector<Vector3D> vertices;
-    std::vector<Vector3D> normals;
-  };
-  
-}
 
 int parsePly(const char *path, vector<Vector3D> *vertices) {
   FILE* file = fopen(path, "r");
@@ -123,7 +110,7 @@ int loadFile(MeshEdit* collada_viewer, const char* path) {
     }
     
     // Add polygons to scene
-//    for (Polygon p : out_polygons) {
+//    for (Polygon p : polygons) {
 //      polymesh->polygons.push_back(p);
 //    }
     
@@ -151,33 +138,6 @@ int main( int argc, char** argv ) {
 
   const char* path = argv[1];
   std::string path_str = path;
-
-  //////////////////////////////
-  // Bezier curve viewer code //
-  //////////////////////////////
-
-  if (path_str.substr(path_str.length()-4, 4) == ".bzc")
-  {
-    // Each file contains a single Bezier curve's control points
-    FILE* file = fopen(path, "r");
-
-    int numControlPoints;
-    fscanf(file, "%d", &numControlPoints);
-
-    BezierCurve curve(numControlPoints);
-    curve.loadControlPoints(file);
-    fclose(file);
-
-    // Create viewer
-    Viewer viewer = Viewer();
-    viewer.set_renderer(&curve);
-    viewer.init();
-    viewer.start();
-
-    exit(EXIT_SUCCESS);
-
-    return 0;
-  }
 
   // create viewer
   Viewer viewer = Viewer();
