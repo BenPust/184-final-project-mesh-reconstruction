@@ -205,7 +205,7 @@ public:
   PointCloud point_cloud;
   
   PointCloudNode(PointCloud& pointCloud) {
-    pointCloud = pointCloud;
+//    pointCloud = pointCloud; // ?? WHY ?? this literally does nothing!
   }
   
   ~PointCloudNode() {
@@ -242,6 +242,10 @@ class MeshEdit : public Renderer {
 
   void load( Scene* scene );
 
+  // for debugging purpose
+  vector<MeshNode> meshNodes;
+  vector<PointCloudNode> pointCloudNodes;
+  
  private:
 
   void initializeStyle( void );
@@ -249,8 +253,9 @@ class MeshEdit : public Renderer {
   // --  Private Variables.
   Scene* scene;
 
-  vector<MeshNode> meshNodes;
-  vector<PointCloudNode> pointCloudNodes;
+  // new variables
+//  vector<MeshNode> meshNodes;
+//  vector<PointCloudNode> pointCloudNodes;
 
   // View Frustrum Variables.
   float hfov; // FIXME : I would like to specify the view frustrum

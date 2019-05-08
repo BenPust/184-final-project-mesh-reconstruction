@@ -109,11 +109,6 @@ int loadFile(MeshEdit* collada_viewer, const char* path) {
       polymesh->vertices.push_back(v);
     }
     
-    // Add polygons to scene
-//    for (Polygon p : polygons) {
-//      polymesh->polygons.push_back(p);
-//    }
-    
     point_cloud->type = POINT_CLOUD;
     node.instance = point_cloud;
     scene->nodes.push_back(node);
@@ -142,8 +137,6 @@ int main( int argc, char** argv ) {
   //////////////////////////////
   // Bezier curve viewer code //
   //////////////////////////////
-  
-  
   
   if (path_str.substr(path_str.length()-4, 4) == ".bzc")
   {
@@ -188,8 +181,13 @@ int main( int argc, char** argv ) {
     msg("Usage: ./meshedit <path to scene file>"); exit(0);
   }
 
+  // Just printing out all the vertices for now.
+  for (Vector3D a: collada_viewer->pointCloudNodes[0].point_cloud.vertices) {
+    cout << a.x << " " << a.y << " " << a.z << endl;
+  }
+  
   // start viewer
   viewer.start();
-
+  
   return 0;
 }
