@@ -16,7 +16,7 @@ using namespace CGL;
 
 #define msg(s) cerr << "[Collada Viewer] " << s << endl;
 
-int parsePly(const char *path, vector<Vector3D> *vertices) {
+int parsePly(const char *path, vector<Vector3D> *vertices, vector< vector<int> > *face_vertex_indices) {
   FILE* file = fopen(path, "r");
   int vertex_count = 0;
   int face_count = 0;
@@ -48,6 +48,19 @@ int parsePly(const char *path, vector<Vector3D> *vertices) {
     Vector3D vertex;
     fscanf(file, "%lf %lf %lf\n", &vertex.x, &vertex.y, &vertex.z);
     vertices->push_back(vertex);
+  }
+
+  while (--face_count >= 0) {
+    int vertex_num, v1_index, v2_index, v3_index;
+    fscanf(file, "%d %d %d %d\n", &vertex_num, &v1_index, &v2_index, &v3_index);
+    if (vertex_num != 3) {
+      cout << "Encounter non-triangular shape in .ply!\n";
+    }
+    vector<int> vertex_indices;
+    vertex_indices.push_back(v1_index);
+    vertex_indices.push_back(v2_index);
+    vertex_indices.push_back(v3_index);
+    face_vertex_indices->push_back(vertex_indices);
   }
   
   return 1;
@@ -93,8 +106,37 @@ int loadFile(MeshEdit* collada_viewer, const char* path) {
 
   else if (path_str.substr(path_str.length()-4, 4) == ".ply") {
     vector<Vector3D> vertices = vector<Vector3D>();
+    vector< vector<int> > face_vertex_indices = vector< vector<int> >();
     
-    parsePly(path, &vertices);
+    parsePly(path, &vertices, &face_vertex_indices);
+
+    // Construct vertex-face mapping
+    vector< vector<int> > vertex_face_indices(vertices.size());
+    for (int face_iter = 0; face_iter < face_vertex_indices.size(); face_iter++) {
+      vector<int> vertex_indices = face_vertex_indices[face_iter];
+      for (int vertex_index : vertex_indices) {
+        vertex_face_indices[vertex_index].push_back(face_iter);
+      }
+    }
+
+    // Compute face normals
+    vector<Vector3D> face_normals = vector<Vector3D>();
+    for (vector<int> vertex_indices : face_vertex_indices) {
+      Vector3D v1 = vertices[vertex_indices[0]];
+      Vector3D v2 = vertices[vertex_indices[1]];
+      Vector3D v3 = vertices[vertex_indices[2]];
+      face_normals.push_back(cross(v2 - v1, v3 - v1).unit());
+    }
+
+    // Compute vertex normals
+    vector<Vector3D> vertex_normals = vector<Vector3D>();
+    for (int vertex_iter = 0; vertex_iter < vertices.size(); vertex_iter++) {
+      Vector3D vertex_normal = Vector3D();
+      for (int face_index : vertex_face_indices[vertex_iter]) {
+        vertex_normal += face_normals[face_index];          // face_normals are not normalized. They are weighted by triangle areas.
+      }
+      vertex_normals.push_back(vertex_normal.unit());
+    }
     
     Camera* cam = new Camera();
     cam->type = CAMERA;
@@ -108,6 +150,11 @@ int loadFile(MeshEdit* collada_viewer, const char* path) {
     for (Vector3D v : vertices) {
       point_cloud->vertices.push_back(v);
       polymesh->vertices.push_back(v);
+    }
+
+    // Add normals to scene
+    for (Vector3D n : vertex_normals) {
+      point_cloud->normals.push_back(n);
     }
     
     point_cloud->type = POINT_CLOUD;
@@ -183,7 +230,7 @@ int main( int argc, char** argv ) {
   }
 
   Voxel a = Voxel(1, 1, 1, 1, 1, 1);
-  
+
   // find a bounding box of the points
   float maxX, minX, maxY, minY, maxZ, minZ;
   bool init_bb = false;
@@ -196,29 +243,29 @@ int main( int argc, char** argv ) {
       minY = a.y;
       maxZ = a.z;
       minZ = a.z;
-      
+
       init_bb = true;
     }
-    
+
     if (maxX < a.x)
       maxX = a.x;
-    
+
     if (minX > a.x)
       minX = a.x;
-    
+
     if (maxY < a.y)
       maxY = a.y;
-    
+
     if (minY > a.y)
       minY = a.y;
-    
+
     if (maxZ < a.z)
       maxZ = a.z;
-    
+
     if (minZ > a.z)
       minZ = a.z;
   }
-  
+
   cout << "Bounding box coordinates: " << minX << " -- " << maxX;
   cout << " -- " << minY << " -- " << maxY;
   cout << " -- " << minZ << " -- " << maxZ << endl;

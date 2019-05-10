@@ -309,7 +309,7 @@ class MeshEdit : public Renderer {
   void reset_camera();
 
   // Rendering functions.
-  void renderPoints ( PointCloud& point_cloud);
+  void renderPointCloud ( PointCloud& point_cloud);
   void renderMesh   ( HalfedgeMesh& mesh );
   void drawFaces    ( HalfedgeMesh& mesh );
   void drawEdges    ( HalfedgeMesh& mesh );

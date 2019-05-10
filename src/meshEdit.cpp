@@ -186,7 +186,7 @@ namespace CGL {
   {
     // TODO: Improve flow of control, maybe by setting up flags or MeshEdit class variables.
     for( vector<PointCloudNode>::iterator n = pointCloudNodes.begin(); n != pointCloudNodes.end(); n++) {
-      renderPoints( n->point_cloud );
+      renderPointCloud( n->point_cloud );
     }
     for( vector<MeshNode>::iterator n = meshNodes.begin(); n != meshNodes.end(); n++ )
     {
@@ -1250,15 +1250,24 @@ namespace CGL {
     glColor3f(c.r, c.g, c.b);
   }
 
-  void MeshEdit::renderPoints( PointCloud& point_cloud )
+  void MeshEdit::renderPointCloud( PointCloud& point_cloud )
   {
+    // Vertex positions & normals only.
     std::vector<Vector3D> vertices = point_cloud.vertices;
+    std::vector<Vector3D> normals = point_cloud.normals;
     DrawStyle *style = &defaultStyle;
     setColor(style->vertexColor);
-    glPointSize(style->vertexRadius);
-    for (Vector3D v : vertices) {
+    glPointSize(style->vertexRadius * 2);         // Larger origin in order to show the direction of normal vectors.
+    glLineWidth(style->strokeWidth);
+    for (int vertex_iter = 0; vertex_iter < vertices.size(); vertex_iter++) {
+      Vector3D v = vertices[vertex_iter];
+      Vector3D n = normals[vertex_iter] / 1000;         // Magic number can be replaced by (constant*average_closest_point_distance) or something
       glBegin(GL_POINTS);
       glVertex3d(v.x, v.y, v.z);
+      glEnd();
+      glBegin(GL_LINES);
+      glVertex3d(v.x, v.y, v.z);
+      glVertex3d(v.x + n.x, v.y + n.y, v.z + n.z);
       glEnd();
     }
   }
