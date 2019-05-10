@@ -14,6 +14,42 @@ BPFront::BPFront(std::vector<CGL::Vector3D> *vertices, CGL::Polymesh* pm) {
   
 }
 
+void BPFront::BP(double rho, BPFront *commonFront) {
+  commonFront = this;
+  std::vector<int> seed_triangle_indices;
+  if (!findSeedTriangle(&seed_triangle_indices, rho, commonFront)) {
+    //cout << "u ded" << endl;
+    return;
+  }
+  BPEdge * edge = getActiveEdge();
+  while (true){
+    while (edge != nullptr){
+      int k;
+      bool pivot_success = edge->pivotOperation(rho, &k, commonFront);
+
+      if (pivot_success){
+        outputTriangleToMesh(edge->i, edge->j, k);
+        this->verticesOnFront[k] = true;
+        this->verticesUsed[k] = true;
+        //cout << "loop size: " << global_front->loops.size() << endl;
+        join(edge, k);
+        //cout << "loop size: " << global_front->loops.size() << endl;
+        // add vertex to the front
+        this->verticesOnFront[k] = true;
+        // if (e_ki in F) glue(e_ik, e_ki , F);
+        // if (e_jk in F) glue(e_kj, e_jk, F);
+        //cout << " on front? " << global_front->vertices_on_front[k] << endl;
+      }
+      edge->markNotActive();
+      //cout << "should be false" << edge->is_active << endl;
+      edge = getActiveEdge();
+    }
+    if (!findSeedTriangle(&seed_triangle_indices ,rho, commonFront)){
+      return;
+    }
+  }
+}
+
 void BPFront::join(BPEdge* e_ij, int k) {
   CGL::Vector3D v_k = vertices[k];
   BPEdge* e_ik;

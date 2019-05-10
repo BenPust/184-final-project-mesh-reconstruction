@@ -19,7 +19,7 @@ BPEdge::BPEdge(int i, int j, int o, BPEdge *prev, BPEdge *next, BPLoop *loop) {
   isActive = true;
 }
 
-bool BPEdge::pivotOperation(BPFront *front, double rho, int *k, BPFront *commonFront) {
+bool BPEdge::pivotOperation(double rho, int *k, BPFront *commonFront) {
 
   std::vector<CGL::Vector3D> vertices = commonFront->vertices;
   
@@ -68,6 +68,10 @@ bool BPEdge::pivotOperation(BPFront *front, double rho, int *k, BPFront *commonF
   *k = first_index;
   return true;
   
+}
+
+void BPEdge::markNotActive() {
+  isActive = false;
 }
 
 // TODO:

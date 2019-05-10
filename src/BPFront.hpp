@@ -19,6 +19,7 @@ class BPEdge;
 class BPFront {
 public:
   BPFront(std::vector<CGL::Vector3D> *vertices, CGL::Polymesh* pm);
+  void BP(double rho, BPFront *commonFront);
   
   CGL::Polymesh *polymesh;
   std::vector<BPLoop *> loops;
@@ -46,7 +47,7 @@ public:
   
   bool isActive;
   
-  bool pivotOperation(BPFront *front, double rho, int *k, BPFront *commonFront);
+  bool pivotOperation(double rho, int *k, BPFront *commonFront);
   std::vector<int> findPoint(double rho, CGL::Vector3D m, std::vector<CGL::Vector3D> vertices);
   void markNotActive();
   

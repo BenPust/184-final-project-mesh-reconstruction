@@ -270,6 +270,10 @@ namespace CGL {
       case 'Q':
         smoothShading = !smoothShading;
         break;
+      case 'b':
+      case 'B':
+        constructMesh();
+        break;
       default:
         break;
     }
@@ -300,6 +304,28 @@ namespace CGL {
     }
   }
 
+  // -------
+  
+  
+  void MeshEdit::constructMesh() {
+    cout << "Constructing Mesh... " << endl;
+    PointCloud pc = pointCloudNodes.back().point_cloud;
+    Polymesh pm;
+    cout << "Found " << pc.vertices.size() << " vertices." << endl;
+    BPFront *front = new BPFront(&pc.vertices, &pm);
+    cout << "Built front." << endl;
+    BPFront *global_front;
+    front->BP(3.0, global_front);
+    
+    // use init_polymesh(pm)
+    cout << ".. built mesh ..." << endl;
+    init_polymesh(pm);
+    render();
+  }
+  
+  
+  // --------
+  
   inline float bound(float a, float low, float high)
   {
     return min(high, max(low, a));

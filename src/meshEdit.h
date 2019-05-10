@@ -15,6 +15,8 @@
 #include "student_code.h"
 #include "pointCloud.h"
 
+#include "BPFront.hpp"
+
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -382,7 +384,7 @@ class MeshEdit : public Renderer {
 
   inline Vector2D unitCubeToScreenSpace(Vector4D & in);
 
-
+  void constructMesh();
 
   // -- Geometric Operations
   // Local operations on current element.
