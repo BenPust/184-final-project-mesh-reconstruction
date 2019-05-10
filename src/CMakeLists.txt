@@ -17,6 +17,9 @@ set(COLLADA_VIEWER_SOURCE
     main.cpp
     png.cpp
     Voxel.cpp
+    BPEdge.cpp
+    BPFront.cpp
+    BPLoop.cpp
 )
 
 # Collada viewer header
@@ -38,6 +41,9 @@ set(COLLADA_VIEWER_HEADER
     png.h
     pointCloud.h
     Voxel.hpp
+    BPEdge.hpp
+    BPFront.hpp
+    BPLoop.hpp
 )
 
 
