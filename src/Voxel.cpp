@@ -23,27 +23,6 @@ Voxel::Voxel(float minX, float maxX, float minY, float maxY, float minZ, float m
   this->rho = xDistance/10;
 }
 
-
-/// Computes a hashmap key for lookup give a 3d point
-//int Voxel::hashKey(CGL::Vector3D *point) {
-//  int x = floor((point->x+abs(minX))/rho);
-//  int y = floor((point->y+abs(minY))/rho);
-//  int z = floor((point->z+abs(minZ))/rho);
-//
-////  int aaa = (x*107 + y)*13 + z;
-////  if (check_dup.find(aaa) != check_dup.end()) {
-////    throw "Should never be here!";
-////  } else {
-////    check_dup[aaa] = true;
-////  }
-//
-//  // 107 and 13 are just prime numbers
-////  return (x*11587 + y)*2749 + z*107;
-//
-//  return x + y*100 + z*10000;
-//}
-
-
 bool Voxel::addPoint(CGL::Vector3D vec) {
 //  point_map[hashKey(&vec)].push_back(&vec);
   int x = floor((vec.x+abs(minX))/rho);
@@ -70,7 +49,7 @@ std::vector<CGL::Vector3D*>* Voxel::getNeighbourVoxels(CGL::Vector3D vec) {
     }
   }
   
-  return &point_map2[std::make_pair(std::make_pair(x, y), z)];
+//  return &point_map2[std::make_pair(std::make_pair(x, y), z)];
   
 }
 
