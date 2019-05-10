@@ -177,6 +177,53 @@ int loadFile(MeshEdit* collada_viewer, const char* path) {
   return 0;
 }
 
+bool findSeedTriangle( const PointCloud* point_cloud , vector<Vector3D>* seed_triangle ) {
+  for (int v_iter = 0; v_iter < point_cloud->vertices.size(); v_iter++) {
+    Vector3D v = point_cloud->vertices[v_iter];
+    vector<Vector3D> neighbor_vertices = point_cloud->vertices;         // TODO: replace once voxel part is working.
+    // possibly TODO: sort neighbor_vertices in order of distance from v.
+    for (int v_b_iter = 1; v_b_iter < neighbor_vertices.size(); v_b_iter++) {
+      for (int v_a_iter = 0; v_a_iter < v_b_iter; v_a_iter++) {
+        Vector3D v_a = neighbor_vertices[v_a_iter];
+        Vector3D v_b = neighbor_vertices[v_b_iter];
+        Vector3D n = cross(v_a - v, v_b - v);         // Don't normalize here.
+        // Find ball center.
+        Vector3D oa = v_a - v;
+        Vector3D ob = v_b - v;
+        Vector3D circle_center = cross(oa.norm2() * v_b - ob.norm2() * v_a, n) / 2 / n.norm2() + v;          // Center of the circle on the plane of 3 given points.
+        float rho = 0.01;          // TODO: change to something like rho = vox.getRadius().
+        if (rho * rho - dot(circle_center - v_a, circle_center - v_a) >= 0) {
+          double t = sqrt((rho * rho - (circle_center - v_a).norm2()) / n.norm2());
+          Vector3D ball_center;
+          if (dot(n, point_cloud->normals[v_iter]) > 0) {
+            ball_center = circle_center + n * t;
+          } else {
+            ball_center = circle_center - n * t;
+          }
+          // Check if the ball contains no other points.
+          bool empty_ball = true;
+          for (int vv_iter = 0; vv_iter < neighbor_vertices.size(); vv_iter++) {
+            Vector3D vv = neighbor_vertices[vv_iter];
+//            if (vv != v && vv != v_a && vv != v_b && (vv - ball_center).norm2() < rho) {
+            if ((vv - v).norm() < 1e-6 && (vv - v_a).norm() < 1e-6 && (vv - v_b).norm() < 1e-6 && (vv - ball_center).norm() < rho) {
+              empty_ball = false;
+              break;
+            }
+          }
+          if (empty_ball) {
+            seed_triangle->clear();
+            seed_triangle->push_back(v);
+            seed_triangle->push_back(v_a);
+            seed_triangle->push_back(v_b);
+            return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
 int main( int argc, char** argv ) {
 
   const char* path = argv[1];
@@ -277,6 +324,27 @@ int main( int argc, char** argv ) {
   
   // start viewer
   viewer.start();
+
+  // Ball-Pivoting Algorithm
+
+  while (true) {
+
+    vector<Vector3D> seed_triangle;
+    // "visited" array
+    if (findSeedTriangle(&(collada_viewer->pointCloudNodes[0].point_cloud), &seed_triangle)) {
+//      DrawStyle *style = &(collada_viewer->defaultStyle);
+//      glPointSize(style->vertexRadius * 4);
+//      for (Vector3D v : seed_triangle*) {
+//        glBegin(GL_POINTS);
+//        glVertex3d(v.x, v.y, v.z);
+//        glEnd();
+//      }
+      printf("Yeahhhh\n");
+      break;
+    } else {
+      break;
+    }
+  }
   
   return 0;
 }
