@@ -5,7 +5,8 @@
 //  Created by Benjamin Pust on 5/10/19.
 //
 
-#include "BPEdge.hpp"
+//#include "BPEdge.hpp"
+#include "BPFront.hpp"
 
 BPEdge::BPEdge(int i, int j, int o, BPEdge *prev, BPEdge *next, BPLoop *loop) {
   this->i = i;
@@ -18,6 +19,6 @@ BPEdge::BPEdge(int i, int j, int o, BPEdge *prev, BPEdge *next, BPLoop *loop) {
   isActive = true;
 }
 
-bool BPEdge::pivotOperation(BPFront *front, double rho, int k) {
-  
-}
+//bool BPEdge::pivotOperation(BPFront *front, double rho, int k) {
+//
+//}

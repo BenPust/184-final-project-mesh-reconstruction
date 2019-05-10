@@ -1,18 +1,23 @@
+////
+////  BPLoop.hpp
+////  ColladaViewer
+////
+////  Created by Benjamin Pust on 5/10/19.
+////
 //
-//  BPLoop.hpp
-//  ColladaViewer
+//#ifndef BPLoop_hpp
+//#define BPLoop_hpp
 //
-//  Created by Benjamin Pust on 5/10/19.
+//#include <stdio.h>
 //
-
-#ifndef BPLoop_hpp
-#define BPLoop_hpp
-
-#include <stdio.h>
-
-class BPLoop {
-public:
-  BPLoop();
-};
-
-#endif /* BPLoop_hpp */
+//class BPFront;
+//class BPEdge;
+//
+//class BPLoop {
+//public:
+//  BPLoop(BPEdge* startEdge, BPFront *front);
+//  BPEdge* startEdge;
+//  BPFront *front;
+//};
+//
+//#endif /* BPLoop_hpp */

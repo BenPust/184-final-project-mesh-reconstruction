@@ -5,4 +5,8 @@
 //  Created by Benjamin Pust on 5/10/19.
 //
 
-#include "BPLoop.hpp"
+#include "BPFront.hpp"
+
+BPLoop::BPLoop(BPEdge* startEdge, BPFront *front) {
+  
+}
