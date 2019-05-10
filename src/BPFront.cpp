@@ -8,6 +8,9 @@
 #include "BPFront.hpp"
 
 BPFront::BPFront(std::vector<CGL::Vector3D> *vertices, std::vector<CGL::Vector3D> *normals, CGL::Polymesh* pm) {
+  this->vertices = *vertices;
+  this->normals = *normals;
+  this->polymesh = pm;
   pm->vertices = *vertices;
   pm->normals = *normals;
   verticesUsed = std::vector<bool>(vertices->size(), false);
