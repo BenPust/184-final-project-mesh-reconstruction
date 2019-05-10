@@ -8,5 +8,6 @@
 #include "BPFront.hpp"
 
 BPLoop::BPLoop(BPEdge* startEdge, BPFront *front) {
-  
+  this->startEdge = startEdge;
+  this->front = front;
 }

@@ -17,6 +17,7 @@ class BPLoop;
 class BPEdge;
 
 class BPFront {
+public:
   BPFront(std::vector<CGL::Vector3D> *vertices, CGL::Polymesh* pm);
   
   CGL::Polymesh *polymesh;
@@ -45,7 +46,12 @@ public:
   
   bool isActive;
   
-  bool pivotOperation(BPFront *front, double rho, int k);
+  bool pivotOperation(BPFront *front, double rho, int *k, BPFront *commonFront);
+  std::vector<int> findPoint(double rho, CGL::Vector3D m, std::vector<CGL::Vector3D> vertices);
+  void markNotActive();
+  
+  CGL::Vector3D getSphereCenter(CGL::Vector3D i,CGL::Vector3D j, CGL::Vector3D x, double rho);
+  std::vector<int> findCandidatePoints(double rho, CGL::Vector3D m, int e_i, int e_j, std::vector<CGL::Vector3D> vertices, BPFront *commonFront);
 };
 
 class BPLoop {
