@@ -16,6 +16,7 @@ set(COLLADA_VIEWER_SOURCE
     meshEdit.cpp
     main.cpp
     png.cpp
+    Voxel.cpp
 )
 
 # Collada viewer header
@@ -36,6 +37,7 @@ set(COLLADA_VIEWER_HEADER
     mergeVertices.h
     png.h
     pointCloud.h
+    Voxel.hpp
 )
 
 
