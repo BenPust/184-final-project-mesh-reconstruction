@@ -229,45 +229,45 @@ int main( int argc, char** argv ) {
     msg("Usage: ./meshedit <path to scene file>"); exit(0);
   }
 
-  Voxel a = Voxel(1, 1, 1, 1, 1, 1);
-
+  // MARK: Voxel stuff, not using rn.
+  
   // find a bounding box of the points
-  float maxX, minX, maxY, minY, maxZ, minZ;
-  bool init_bb = false;
-  for (Vector3D a: collada_viewer->pointCloudNodes[0].point_cloud.vertices) {
-    if (!init_bb) {
-      maxX = a.x;
-      minX = a.x;
-      maxY = a.y;
-      minY = a.y;
-      maxZ = a.z;
-      minZ = a.z;
-
-      init_bb = true;
-    }
-
-    if (maxX < a.x)
-      maxX = a.x;
-    if (minX > a.x)
-      minX = a.x;
-    if (maxY < a.y)
-      maxY = a.y;
-    if (minY > a.y)
-      minY = a.y;
-    if (maxZ < a.z)
-      maxZ = a.z;
-    if (minZ > a.z)
-      minZ = a.z;
-  }
-  
-  Voxel vox = Voxel(minX, maxX, minY, maxY, minZ, maxZ);
-  
-  std::vector<Vector3D> *vertices_tmp = &collada_viewer->pointCloudNodes[0].point_cloud.vertices;
-  for (int i = 0; i < vertices_tmp->size(); i++) {
-    vox.addPoint((*vertices_tmp)[i]);
-  }
-
-  vox.printOutValues();
+//  float maxX, minX, maxY, minY, maxZ, minZ;
+//  bool init_bb = false;
+//  for (Vector3D a: collada_viewer->pointCloudNodes[0].point_cloud.vertices) {
+//    if (!init_bb) {
+//      maxX = a.x;
+//      minX = a.x;
+//      maxY = a.y;
+//      minY = a.y;
+//      maxZ = a.z;
+//      minZ = a.z;
+//
+//      init_bb = true;
+//    }
+//
+//    if (maxX < a.x)
+//      maxX = a.x;
+//    if (minX > a.x)
+//      minX = a.x;
+//    if (maxY < a.y)
+//      maxY = a.y;
+//    if (minY > a.y)
+//      minY = a.y;
+//    if (maxZ < a.z)
+//      maxZ = a.z;
+//    if (minZ > a.z)
+//      minZ = a.z;
+//  }
+//
+//  Voxel vox = Voxel(minX, maxX, minY, maxY, minZ, maxZ);
+//
+//  std::vector<Vector3D> *vertices_tmp = &collada_viewer->pointCloudNodes[0].point_cloud.vertices;
+//  for (int i = 0; i < vertices_tmp->size(); i++) {
+//    vox.addPoint((*vertices_tmp)[i]);
+//  }
+//
+//  vox.printOutValues();
   
   
 //  cout << "Bounding box coordinates: " << minX << " -- " << maxX;

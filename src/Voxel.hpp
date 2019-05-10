@@ -14,7 +14,6 @@
 #include "CGL/CGL.h"
 #include<tuple>
 
-
 class Voxel {
   // used for storing points for O(1) lookup
   
