@@ -25,6 +25,8 @@ void BPFront::BP(double rho, BPFront *commonFront) {
     //cout << "u ded" << endl;
     return;
   }
+  printf("Seed triangle indices: %d %d %d\n", seed_triangle_indices[0], seed_triangle_indices[1], seed_triangle_indices[2]);
+
   BPEdge * edge = getActiveEdge();
   while (true){
     while (edge != nullptr){
@@ -142,37 +144,59 @@ bool BPFront::findSeedTriangle(std::vector<int> *indices, double rho, BPFront *c
 }
 
 bool BPFront::findSeedTriangleIndices(std::vector<int>* indices, double rho, BPFront *commonFront) {
-  CGL::Vector3D b, c, iV, jV;
+  CGL::Vector3D b, iV, jV;
   for (int index = 0; index < vertices.size(); index++) {
     if (!verticesUsed[index]) {
       b = vertices[index]; // TODO: +
-      
-      std::vector<int> nV = findNearbyPoints(2*rho, index, vertices, commonFront);
-      
-      for (int i = 0; i < nV.size(); i++){
-        for (int j = 0; j < nV.size(); j++) {
-          iV = nV[i];
-          jV = nV[j];
-          c = (b+iV+jV)/3.0;
-          if (i == j || commonFront->verticesUsed[i] || commonFront->verticesUsed[j]) {
+
+      std::vector<int> nV = findNearbyPoints(2 * rho, index, vertices, commonFront);
+//      std::cout << nV.size() << std::endl;          // A practical to set rho is to observe nV.size(). Adjust rho until nV.size() is ~10 or ~100 (not too large).
+      // possibly TODO: sort neighbor_vertices in order of distance from v.
+
+      for (int j = 1; j < nV.size(); j++) {
+        for (int i = 0; i < j; i++) {
+          if (index == nV[i] || index == nV[j] || commonFront->verticesUsed[nV[i]] || commonFront->verticesUsed[nV[j]]) {
             continue;
           }
-          
-          for (CGL::Vector3D v : vertices) {
-            if ((v - c).norm() < rho) {
-              continue;
+          iV = vertices[nV[i]];
+          jV = vertices[nV[j]];
+          CGL::Vector3D n = cross(iV - b, jV - b);         // Don't normalize here.
+//          c = (b+iV+jV)/3.0;
+          // Find ball center.
+          CGL::Vector3D bi = iV - b;
+          CGL::Vector3D bj = jV - b;
+          CGL::Vector3D circle_center = cross(bi.norm2() * jV - bj.norm2() * iV, n) / 2 / n.norm2() +
+                                        b;          // Center of the circle on the plane of 3 given points.
+          if (rho * rho - dot(circle_center - iV, circle_center - iV) >= 0) {
+            double t = sqrt((rho * rho - (circle_center - iV).norm2()) / n.norm2());
+            CGL::Vector3D ball_center;
+            if (dot(n, normals[index]) > 0) {
+              ball_center = circle_center + n * t;
+            } else {
+              ball_center = circle_center - n * t;
             }
-            indices->push_back(index);
-            indices->push_back(i);
-            indices->push_back(j);
-            
-            commonFront->verticesOnFront[i] = true;
-            commonFront->verticesOnFront[j] = true;
-            commonFront->verticesOnFront[index] = true;
-            commonFront->verticesUsed[i] = true;
-            commonFront->verticesUsed[j] = true;
-            commonFront->verticesUsed[index] = true;
-            return true;
+
+            // Check if the ball contains no other points.
+            bool empty_ball = true;
+            for (CGL::Vector3D v : vertices) {
+              if ((v - b).norm() > 1e-6 && (v - iV).norm() > 1e-6 && (v - jV).norm() > 1e-6 && (v - circle_center).norm() < rho) {
+                empty_ball = false;
+                break;
+              }
+            }
+            if (empty_ball) {
+              indices->push_back(index);
+              indices->push_back(nV[i]);
+              indices->push_back(nV[j]);
+
+              commonFront->verticesOnFront[nV[i]] = true;
+              commonFront->verticesOnFront[nV[j]] = true;
+              commonFront->verticesOnFront[index] = true;
+              commonFront->verticesUsed[nV[i]] = true;
+              commonFront->verticesUsed[nV[j]] = true;
+              commonFront->verticesUsed[index] = true;
+              return true;
+            }
           }
         }
       }
