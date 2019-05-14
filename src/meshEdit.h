@@ -384,7 +384,7 @@ class MeshEdit : public Renderer {
 
   inline Vector2D unitCubeToScreenSpace(Vector4D & in);
 
-  void constructMesh();
+  void constructMeshFromPointCloud();
 
   // -- Geometric Operations
   // Local operations on current element.
