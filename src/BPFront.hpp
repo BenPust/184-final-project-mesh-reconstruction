@@ -34,7 +34,7 @@ public:
   BPLoop* insertEdge(BPEdge *edge);
   bool findSeedTriangle(std::vector<int> *indices, double rho, BPFront *commonFront);
   bool findSeedTriangleIndices(std::vector<int>* indices, double rho, BPFront *commonFront);
-  std::vector<int> findNearbyPoints(double rho, int cand_idx, std::vector<CGL::Vector3D> vertices, BPFront *commonFront);
+  std::vector<int> findNearbyPoints(double rho, int cand_idx, BPFront *commonFront);
 };
 
 class BPEdge {

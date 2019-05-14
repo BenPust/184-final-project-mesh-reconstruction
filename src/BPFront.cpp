@@ -147,7 +147,7 @@ bool BPFront::findSeedTriangleIndices(std::vector<int>* indices, double rho, BPF
     if (!verticesUsed[index]) {
       b = vertices[index]; // TODO: +
       
-      std::vector<int> nV = findNearbyPoints(2*rho, index, vertices, commonFront);
+      std::vector<int> nV = findNearbyPoints(2*rho, index, commonFront);
       
       for (int i = 0; i < nV.size(); i++){
         for (int j = 0; j < nV.size(); j++) {
@@ -181,7 +181,9 @@ bool BPFront::findSeedTriangleIndices(std::vector<int>* indices, double rho, BPF
   return false;
 }
 
-std::vector<int> BPFront::findNearbyPoints(double rho, int cand_idx, std::vector<CGL::Vector3D> vertices, BPFront *commonFront) {
+/// Searches all the vertices for points that are withing 2rho of the candidate index vertex
+/// Return all the indecies of vertex vector that are withing 2tho of that point
+std::vector<int> BPFront::findNearbyPoints(double rho, int cand_idx, BPFront *commonFront) {
   std::vector<int> c = std::vector<int>();
   for (std::size_t i = 0; i != vertices.size(); ++i) {
     // //cout << (vertices[i] - vertices[cand_idx]).norm() << endl;

@@ -27,7 +27,9 @@ public:
   
 private:
   float minX,  maxX,  minY,  maxY,  minZ,  maxZ;
+  float deltaX, deltaY, deltaZ;
   float rho = 0;
+  float splits = 100;
   
   std::map<std::pair<std::pair<int, int>, int> , std::vector<CGL::Vector3D * > > point_map2;
   

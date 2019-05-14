@@ -186,28 +186,28 @@ int main( int argc, char** argv ) {
   // Bezier curve viewer code //
   //////////////////////////////
   
-  if (path_str.substr(path_str.length()-4, 4) == ".bzc")
-  {
-    // Each file contains a single Bezier curve's control points
-    FILE* file = fopen(path, "r");
-    
-    int numControlPoints;
-    fscanf(file, "%d", &numControlPoints);
-    
-    BezierCurve curve(numControlPoints);
-    curve.loadControlPoints(file);
-    fclose(file);
-    
-    // Create viewer
-    Viewer viewer = Viewer();
-    viewer.set_renderer(&curve);
-    viewer.init();
-    viewer.start();
-    
-    exit(EXIT_SUCCESS);
-    
-    return 0;
-  }
+//  if (path_str.substr(path_str.length()-4, 4) == ".bzc")
+//  {
+//    // Each file contains a single Bezier curve's control points
+//    FILE* file = fopen(path, "r");
+//
+//    int numControlPoints;
+//    fscanf(file, "%d", &numControlPoints);
+//
+//    BezierCurve curve(numControlPoints);
+//    curve.loadControlPoints(file);
+//    fclose(file);
+//
+//    // Create viewer
+//    Viewer viewer = Viewer();
+//    viewer.set_renderer(&curve);
+//    viewer.init();
+//    viewer.start();
+//
+//    exit(EXIT_SUCCESS);
+//
+//    return 0;
+//  }
   
   
   // create viewer
@@ -232,48 +232,57 @@ int main( int argc, char** argv ) {
   // MARK: Voxel stuff, not using rn.
   
   // find a bounding box of the points
-//  float maxX, minX, maxY, minY, maxZ, minZ;
-//  bool init_bb = false;
-//  for (Vector3D a: collada_viewer->pointCloudNodes[0].point_cloud.vertices) {
-//    if (!init_bb) {
-//      maxX = a.x;
-//      minX = a.x;
-//      maxY = a.y;
-//      minY = a.y;
-//      maxZ = a.z;
-//      minZ = a.z;
-//
-//      init_bb = true;
-//    }
-//
-//    if (maxX < a.x)
-//      maxX = a.x;
-//    if (minX > a.x)
-//      minX = a.x;
-//    if (maxY < a.y)
-//      maxY = a.y;
-//    if (minY > a.y)
-//      minY = a.y;
-//    if (maxZ < a.z)
-//      maxZ = a.z;
-//    if (minZ > a.z)
-//      minZ = a.z;
-//  }
-//
-//  Voxel vox = Voxel(minX, maxX, minY, maxY, minZ, maxZ);
-//
-//  std::vector<Vector3D> *vertices_tmp = &collada_viewer->pointCloudNodes[0].point_cloud.vertices;
-//  for (int i = 0; i < vertices_tmp->size(); i++) {
-//    vox.addPoint((*vertices_tmp)[i]);
-//  }
-//
-//  vox.printOutValues();
-  
-  
-//  cout << "Bounding box coordinates: " << minX << " -- " << maxX;
-//  cout << " -- " << minY << " -- " << maxY;
-//  cout << " -- " << minZ << " -- " << maxZ << endl;
+  float maxX, minX, maxY, minY, maxZ, minZ;
+  bool init_bb = false;
+  for (Vector3D a: collada_viewer->pointCloudNodes[0].point_cloud.vertices) {
+    if (!init_bb) {
+      maxX = a.x;
+      minX = a.x;
+      maxY = a.y;
+      minY = a.y;
+      maxZ = a.z;
+      minZ = a.z;
 
+      init_bb = true;
+    }
+
+    if (maxX < a.x)
+      maxX = a.x;
+    if (minX > a.x)
+      minX = a.x;
+    if (maxY < a.y)
+      maxY = a.y;
+    if (minY > a.y)
+      minY = a.y;
+    if (maxZ < a.z)
+      maxZ = a.z;
+    if (minZ > a.z)
+      minZ = a.z;
+  }
+
+  Voxel vox = Voxel(minX, maxX, minY, maxY, minZ, maxZ);
+
+  std::vector<Vector3D> *vertices_tmp = &collada_viewer->pointCloudNodes[0].point_cloud.vertices;
+  for (int i = 0; i < vertices_tmp->size(); i++) {
+    vox.addPoint((*vertices_tmp)[i]);
+  }
+  
+//  vox.printOutValues();
+
+  int random_point_index = 33;
+  std::vector<CGL::Vector3D*>* neighbors = vox.getNeighbourVoxels(collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index]);
+  
+  cout << "For a point: " << collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index].x << " " <<
+  collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index].y << " " <<
+  collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index].z << endl;
+  
+  cout << "nighbor size: " << neighbors->size() << endl;
+  
+  for (int i = 0; i < neighbors->size(); i++) {
+    cout << (*neighbors)[i]->x << " " << (*neighbors)[i]->y << " " << (*neighbors)[i]->z << endl;
+  }
+  
+  vox.printOutValues();
   
   // start viewer
   viewer.start();
