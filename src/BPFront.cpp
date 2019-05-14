@@ -7,11 +7,12 @@
 
 #include "BPFront.hpp"
 
-BPFront::BPFront(std::vector<CGL::Vector3D> *vertices, CGL::Polymesh* pm) {
-  
+BPFront::BPFront(std::vector<CGL::Vector3D> *vertices, std::vector<CGL::Vector3D> *normals, CGL::Polymesh* pm) {
   this->vertices = *vertices;
+  this->normals = *normals;
   this->polymesh = pm;
   pm->vertices = *vertices;
+  pm->normals = *normals;
   verticesUsed = std::vector<bool>(vertices->size(), false);
   verticesOnFront = std::vector<bool>(vertices->size(), false);
   
@@ -107,7 +108,7 @@ BPLoop *BPFront::insertEdge(BPEdge *edge) {
 }
 
 bool BPFront::findSeedTriangle(std::vector<int> *indices, double rho, BPFront *commonFront) {
-  if (!findSeedTrangleIndices(indices, rho, commonFront))
+  if (!findSeedTriangleIndices(indices, rho, commonFront))
     return false;
   
   int i = (*indices)[0];
@@ -140,7 +141,7 @@ bool BPFront::findSeedTriangle(std::vector<int> *indices, double rho, BPFront *c
   return true;
 }
 
-bool BPFront::findSeedTrangleIndices(std::vector<int>* indices, double rho, BPFront *commonFront) {
+bool BPFront::findSeedTriangleIndices(std::vector<int>* indices, double rho, BPFront *commonFront) {
   CGL::Vector3D b, c, iV, jV;
   for (int index = 0; index < vertices.size(); index++) {
     if (!verticesUsed[index]) {
