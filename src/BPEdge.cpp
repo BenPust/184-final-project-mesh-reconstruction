@@ -8,6 +8,10 @@
 //#include "BPEdge.hpp"
 #include "BPFront.hpp"
 
+BPEdge::BPEdge() {
+  throw "Should never run this!";
+}
+
 BPEdge::BPEdge(int i, int j, int o, BPEdge *prev, BPEdge *next, BPLoop *loop) {
   this->i = i;
   this->j = j;

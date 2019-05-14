@@ -56,6 +56,7 @@ int parsePly(const char *path, vector<Vector3D> *vertices, vector< vector<int> >
     if (vertex_num != 3) {
       cout << "Encounter non-triangular shape in .ply!\n";
     }
+    
     vector<int> vertex_indices;
     vertex_indices.push_back(v1_index);
     vertex_indices.push_back(v2_index);
@@ -151,6 +152,15 @@ int loadFile(MeshEdit* collada_viewer, const char* path) {
       point_cloud->vertices.push_back(v);
       polymesh->vertices.push_back(v);
     }
+    
+    for (vector<int> face_vertex_indice : face_vertex_indices) {
+      Polygon p = Polygon();
+      for (int x : face_vertex_indice) {
+        p.vertex_indices.push_back(x);
+      }
+      
+      polymesh->polygons.push_back(p);
+    }
 
     // Add normals to scene
     for (Vector3D n : vertex_normals) {
@@ -232,57 +242,58 @@ int main( int argc, char** argv ) {
   // MARK: Voxel stuff, not using rn.
   
   // find a bounding box of the points
-  float maxX, minX, maxY, minY, maxZ, minZ;
-  bool init_bb = false;
-  for (Vector3D a: collada_viewer->pointCloudNodes[0].point_cloud.vertices) {
-    if (!init_bb) {
-      maxX = a.x;
-      minX = a.x;
-      maxY = a.y;
-      minY = a.y;
-      maxZ = a.z;
-      minZ = a.z;
-
-      init_bb = true;
-    }
-
-    if (maxX < a.x)
-      maxX = a.x;
-    if (minX > a.x)
-      minX = a.x;
-    if (maxY < a.y)
-      maxY = a.y;
-    if (minY > a.y)
-      minY = a.y;
-    if (maxZ < a.z)
-      maxZ = a.z;
-    if (minZ > a.z)
-      minZ = a.z;
-  }
-
-  Voxel vox = Voxel(minX, maxX, minY, maxY, minZ, maxZ);
-
-  std::vector<Vector3D> *vertices_tmp = &collada_viewer->pointCloudNodes[0].point_cloud.vertices;
-  for (int i = 0; i < vertices_tmp->size(); i++) {
-    vox.addPoint((*vertices_tmp)[i]);
-  }
+//  float maxX, minX, maxY, minY, maxZ, minZ;
+//  bool init_bb = false;
+//  for (Vector3D a: collada_viewer->pointCloudNodes[0].point_cloud.vertices) {
+//    if (!init_bb) {
+//      maxX = a.x;
+//      minX = a.x;
+//      maxY = a.y;
+//      minY = a.y;
+//      maxZ = a.z;
+//      minZ = a.z;
+//
+//      init_bb = true;
+//    }
+//
+//    if (maxX < a.x)
+//      maxX = a.x;
+//    if (minX > a.x)
+//      minX = a.x;
+//    if (maxY < a.y)
+//      maxY = a.y;
+//    if (minY > a.y)
+//      minY = a.y;
+//    if (maxZ < a.z)
+//      maxZ = a.z;
+//    if (minZ > a.z)
+//      minZ = a.z;
+//  }
+//
+//  Voxel vox = Voxel(minX, maxX, minY, maxY, minZ, maxZ);
+//
+//  std::vector<Vector3D> *vertices_tmp = &collada_viewer->pointCloudNodes[0].point_cloud.vertices;
+//  for (int i = 0; i < vertices_tmp->size(); i++) {
+//    vox.addPoint((*vertices_tmp)[i]);
+//  }
   
+  // Voxel debugging
 //  vox.printOutValues();
 
-  int random_point_index = 33;
-  std::vector<CGL::Vector3D*>* neighbors = vox.getNeighbourVoxels(collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index]);
-  
-  cout << "For a point: " << collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index].x << " " <<
-  collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index].y << " " <<
-  collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index].z << endl;
-  
-  cout << "nighbor size: " << neighbors->size() << endl;
-  
-  for (int i = 0; i < neighbors->size(); i++) {
-    cout << (*neighbors)[i]->x << " " << (*neighbors)[i]->y << " " << (*neighbors)[i]->z << endl;
-  }
-  
-  vox.printOutValues();
+//  int random_point_index = 33;
+//  std::vector<CGL::Vector3D*>* neighbors = vox.getNeighbourVoxels(collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index]);
+//  
+//  cout << "For a point: " << collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index].x << " " <<
+//  collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index].y << " " <<
+//  collada_viewer->pointCloudNodes[0].point_cloud.vertices[random_point_index].z << endl;
+//  
+//  cout << "nighbor size: " << neighbors->size() << endl;
+//  
+//  for (int i = 0; i < neighbors->size(); i++) {
+//    cout << (*neighbors)[i]->x << " " << (*neighbors)[i]->y << " " << (*neighbors)[i]->z << endl;
+//  }
+//  
+//  vox.printOutValues();
   
   // start viewer
   viewer.start();

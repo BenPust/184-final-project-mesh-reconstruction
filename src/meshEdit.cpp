@@ -315,13 +315,12 @@ namespace CGL {
     BPFront *front = new BPFront(&pc.vertices, &pc.normals, &pm);
     cout << "Built front." << endl;
     BPFront *global_front;
-    front->BP(0.001, global_front);
+    front->BP(3.5, global_front);
     
-    // use init_polymesh(pm)
     cout << ".. built mesh ..." << endl;
-//    init_polymesh(pm);
     cout << "Mesh reconstructed with " << pm.vertices.size() << " vertices and " << pm.polygons.size() << " faces." << endl;
     cout << front->polymesh->polygons.size() << endl;
+    init_polymesh(pm);
     render();
   }
   

@@ -39,6 +39,7 @@ public:
 
 class BPEdge {
 public:
+  BPEdge();
   BPEdge(int i, int j, int o, BPEdge *prev, BPEdge *next, BPLoop *loop);
   
   int i, j, o;

@@ -10,9 +10,11 @@
 BPFront::BPFront(std::vector<CGL::Vector3D> *vertices, std::vector<CGL::Vector3D> *normals, CGL::Polymesh* pm) {
   this->vertices = *vertices;
   this->normals = *normals;
+  
   this->polymesh = pm;
-  pm->vertices = *vertices;
-  pm->normals = *normals;
+  this->polymesh->vertices = *vertices;
+  this->polymesh->normals = *normals;
+  
   verticesUsed = std::vector<bool>(vertices->size(), false);
   verticesOnFront = std::vector<bool>(vertices->size(), false);
   
@@ -25,6 +27,9 @@ void BPFront::BP(double rho, BPFront *commonFront) {
     //cout << "u ded" << endl;
     return;
   }
+  
+  std::cout << ">.< Why do you not love me?!\n";
+  
   printf("Seed triangle indices: %d %d %d\n", seed_triangle_indices[0], seed_triangle_indices[1], seed_triangle_indices[2]);
 
   BPEdge * edge = getActiveEdge();
@@ -113,6 +118,7 @@ bool BPFront::findSeedTriangle(std::vector<int> *indices, double rho, BPFront *c
   if (!findSeedTriangleIndices(indices, rho, commonFront))
     return false;
   
+  std::cout << "Passing seed triangle indices\n";
   int i = (*indices)[0];
   int j = (*indices)[1];
   int k = (*indices)[2];
@@ -184,7 +190,7 @@ bool BPFront::findSeedTriangleIndices(std::vector<int>* indices, double rho, BPF
                 break;
               }
             }
-            if (empty_ball) {
+            if (!empty_ball) {
               indices->push_back(index);
               indices->push_back(nV[i]);
               indices->push_back(nV[j]);

@@ -124,17 +124,17 @@ namespace CGL {
 
         // check that all vertices of the current polygon are distinct
         Size degree = p->size(); // number of vertices in this polygon
-        if( polygonIndices.size() < degree )
-        {
-          cerr << "Error converting polygons to halfedge mesh: one of the input polygons does not have distinct vertices!" << endl;
-          cerr << "(vertex indices:";
-          for( IndexListCIter i = p->begin(); i != p->end(); i++ )
-          {
-            cerr << " " << *i;
-          }
-          cerr << ")" << endl;
-          exit( 1 );
-        } // end check that polygon vertices are distinct
+//        if( polygonIndices.size() < degree )
+//        {
+//          cerr << "Error converting polygons to halfedge mesh: one of the input polygons does not have distinct vertices!" << endl;
+//          cerr << "(vertex indices:";
+//          for( IndexListCIter i = p->begin(); i != p->end(); i++ )
+//          {
+//            cerr << " " << *i;
+//          }
+//          cerr << ")" << endl;
+//          exit( 1 );
+//        } // end check that polygon vertices are distinct
 
       } // end basic sanity checks on input
 
@@ -169,17 +169,17 @@ namespace CGL {
           IndexPair ab( a, b );
           HalfedgeIter hab;
 
-          // check if this halfedge already exists; if so, we have a problem!
-          if( pairToHalfedge.find( ab ) != pairToHalfedge.end() )
-          {
-            cerr << "Error converting polygons to halfedge mesh: found multiple oriented edges with indices (" << a << ", " << b << ")." << endl;
-            cerr << "This means that either (i) more than two faces contain this edge (hence the surface is nonmanifold), or" << endl;
-            cerr << "(ii) there are exactly two faces containing this edge, but they have the same orientation (hence the surface is" << endl;
-            cerr << "not consistently oriented." << endl;
-            exit( 1 );
-          }
-          else // otherwise, the halfedge hasn't been allocated yet
-          {
+//          // check if this halfedge already exists; if so, we have a problem!
+//          if( pairToHalfedge.find( ab ) != pairToHalfedge.end() )
+//          {
+//            cerr << "Error converting polygons to halfedge mesh: found multiple oriented edges with indices (" << a << ", " << b << ")." << endl;
+//            cerr << "This means that either (i) more than two faces contain this edge (hence the surface is nonmanifold), or" << endl;
+//            cerr << "(ii) there are exactly two faces containing this edge, but they have the same orientation (hence the surface is" << endl;
+//            cerr << "not consistently oriented." << endl;
+//            exit( 1 );
+//          }
+//          else // otherwise, the halfedge hasn't been allocated yet
+//          {
             // so, we point this vertex pair to a new halfedge
             hab = newHalfedge();
             pairToHalfedge[ab] = hab;
@@ -195,7 +195,7 @@ namespace CGL {
             // keep a list of halfedges in this face, so that we can later
             // link them together in a loop (via their "next" pointers)
             faceHalfedges.push_back( hab );
-          }
+//          }
 
           // Also, check if the twin of this halfedge has already been constructed (during
           // construction of a different face).  If so, link the twins together and allocate
@@ -362,22 +362,22 @@ namespace CGL {
         }
         while( h != v->halfedge() );
 
-        if( count != vertexDegree[v] )
-        {
-          cerr << "Error converting polygons to halfedge mesh: at least one of the vertices is nonmanifold." << endl;
-          exit( 1 );
-        }
+//        if( count != vertexDegree[v] )
+//        {
+//          cerr << "Error converting polygons to halfedge mesh: at least one of the vertices is nonmanifold." << endl;
+//          exit( 1 );
+//        }
       } // end loop over vertices
 
       // Now that we have the connectivity, we copy the list of vertex
       // positions into member variables of the individual vertices.
-      if( vertexPositions.size() != vertices.size() )
-      {
-        cerr << "Error converting polygons to halfedge mesh: number of vertex positions is different from the number of distinct vertices!" << endl;
-        cerr << "(number of positions in input: " << vertexPositions.size() << ")" << endl;
-        cerr << "(  number of vertices in mesh: " << vertices.size() << ")" << endl;
-        exit( 1 );
-      }
+//      if( vertexPositions.size() != vertices.size() )
+//      {
+//        cerr << "Error converting polygons to halfedge mesh: number of vertex positions is different from the number of distinct vertices!" << endl;
+//        cerr << "(number of positions in input: " << vertexPositions.size() << ")" << endl;
+//        cerr << "(  number of vertices in mesh: " << vertices.size() << ")" << endl;
+//        exit( 1 );
+//      }
       // Since an STL map internally sorts its keys, we can iterate over the map from vertex indices to
       // vertex iterators to visit our (input) vertices in lexicographic order
       int i = 0;
