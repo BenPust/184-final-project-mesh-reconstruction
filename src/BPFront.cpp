@@ -155,11 +155,13 @@ bool BPFront::findSeedTriangleIndices(std::vector<int>* indices, double rho, BPF
     if (!verticesUsed[index]) {
       b = vertices[index]; // TODO: +
 
-      std::vector<int> nV = findNearbyPoints(2 * rho, index, commonFront);
+//      std::vector<int> nV = findNearbyPoints(2 * rho, index, commonFront);
+      std::vector<int> nV = findNearbyPoints(rho, index, commonFront);
 //      std::cout << nV.size() << std::endl;          // A practical to set rho is to observe nV.size(). Adjust rho until nV.size() is ~10 or ~100 (not too large).
       // possibly TODO: sort neighbor_vertices in order of distance from v.
 
       for (int j = 1; j < nV.size(); j++) {
+//        printf("dist point %lf\n", (jV - b).norm());
         for (int i = 0; i < j; i++) {
           if (index == nV[i] || index == nV[j] || commonFront->verticesUsed[nV[i]] || commonFront->verticesUsed[nV[j]]) {
             continue;
@@ -171,16 +173,18 @@ bool BPFront::findSeedTriangleIndices(std::vector<int>* indices, double rho, BPF
           // Find ball center.
           CGL::Vector3D bi = iV - b;
           CGL::Vector3D bj = jV - b;
-          CGL::Vector3D circle_center = cross(bi.norm2() * jV - bj.norm2() * iV, n) / 2 / n.norm2() +
+          CGL::Vector3D circle_center = cross(bi.norm2() * bj - bj.norm2() * bi, n) / 2 / n.norm2() +
                                         b;          // Center of the circle on the plane of 3 given points.
-          if (rho * rho - dot(circle_center - iV, circle_center - iV) >= 0) {
-            double t = sqrt((rho * rho - (circle_center - iV).norm2()) / n.norm2());
+//          printf("circle radius %lf %lf %lf\n", (circle_center - b).norm(), (circle_center - iV).norm(), (circle_center - jV).norm());
+          if (rho * rho - dot(circle_center - b, circle_center - b) >= 0) {
+            double t = sqrt((rho * rho - (circle_center - b).norm2()) / n.norm2());
             CGL::Vector3D ball_center;
             if (dot(n, normals[index]) > 0) {
               ball_center = circle_center + n * t;
             } else {
               ball_center = circle_center - n * t;
             }
+//            printf("ball radius %lf %lf %lf\n", (ball_center - b).norm(), (ball_center - iV).norm(), (ball_center - jV).norm());
 
             // Check if the ball contains no other points.
             bool empty_ball = true;
@@ -190,7 +194,8 @@ bool BPFront::findSeedTriangleIndices(std::vector<int>* indices, double rho, BPF
                 break;
               }
             }
-            if (!empty_ball) {
+            if (empty_ball) {
+              printf("Found seed.\n");
               indices->push_back(index);
               indices->push_back(nV[i]);
               indices->push_back(nV[j]);

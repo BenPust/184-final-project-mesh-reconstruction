@@ -315,7 +315,7 @@ namespace CGL {
     BPFront *front = new BPFront(&pc.vertices, &pc.normals, &pm);
     cout << "Built front." << endl;
     BPFront *global_front;
-    front->BP(3.5, global_front);
+    front->BP(0.2, global_front);
     
     cout << ".. built mesh ..." << endl;
     cout << "Mesh reconstructed with " << pm.vertices.size() << " vertices and " << pm.polygons.size() << " faces." << endl;
@@ -1283,7 +1283,8 @@ namespace CGL {
     std::vector<Vector3D> vertices = point_cloud.vertices;
     std::vector<Vector3D> normals = point_cloud.normals;
     DrawStyle *style = &defaultStyle;
-    setColor(style->vertexColor);
+//    setColor(style->vertexColor);
+    glColor3f(1.0, 0.0, 0.0);
     glPointSize(style->vertexRadius * 2);         // Larger origin in order to show the direction of normal vectors.
     glLineWidth(style->strokeWidth);
     for (int vertex_iter = 0; vertex_iter < vertices.size(); vertex_iter++) {

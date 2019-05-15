@@ -47,6 +47,7 @@ int parsePly(const char *path, vector<Vector3D> *vertices, vector< vector<int> >
   while (--vertex_count >= 0) {
     Vector3D vertex;
     fscanf(file, "%lf %lf %lf\n", &vertex.x, &vertex.y, &vertex.z);
+    fscanf(file, "%lf %lf %lf\n", &vertex.x, &vertex.y, &vertex.z);
     vertices->push_back(vertex);
   }
 
@@ -120,24 +121,29 @@ int loadFile(MeshEdit* collada_viewer, const char* path) {
       }
     }
 
-    // Compute face normals
-    vector<Vector3D> face_normals = vector<Vector3D>();
-    for (vector<int> vertex_indices : face_vertex_indices) {
-      Vector3D v1 = vertices[vertex_indices[0]];
-      Vector3D v2 = vertices[vertex_indices[1]];
-      Vector3D v3 = vertices[vertex_indices[2]];
-      face_normals.push_back(cross(v2 - v1, v3 - v1).unit());
+    vector<Vector3D> vertex_normals = vector<Vector3D>();
+    for (Vector3D v : vertices) {
+      vertex_normals.push_back(v);
     }
 
-    // Compute vertex normals
-    vector<Vector3D> vertex_normals = vector<Vector3D>();
-    for (int vertex_iter = 0; vertex_iter < vertices.size(); vertex_iter++) {
-      Vector3D vertex_normal = Vector3D();
-      for (int face_index : vertex_face_indices[vertex_iter]) {
-        vertex_normal += face_normals[face_index];          // face_normals are not normalized. They are weighted by triangle areas.
-      }
-      vertex_normals.push_back(vertex_normal.unit());
-    }
+//    // Compute face normals
+//    vector<Vector3D> face_normals = vector<Vector3D>();
+//    for (vector<int> vertex_indices : face_vertex_indices) {
+//      Vector3D v1 = vertices[vertex_indices[0]];
+//      Vector3D v2 = vertices[vertex_indices[1]];
+//      Vector3D v3 = vertices[vertex_indices[2]];
+//      face_normals.push_back(cross(v2 - v1, v3 - v1).unit());
+//    }
+//
+//    // Compute vertex normals
+//    vector<Vector3D> vertex_normals = vector<Vector3D>();
+//    for (int vertex_iter = 0; vertex_iter < vertices.size(); vertex_iter++) {
+//      Vector3D vertex_normal = Vector3D();
+//      for (int face_index : vertex_face_indices[vertex_iter]) {
+//        vertex_normal += face_normals[face_index];          // face_normals are not normalized. They are weighted by triangle areas.
+//      }
+//      vertex_normals.push_back(vertex_normal.unit());
+//    }
     
     Camera* cam = new Camera();
     cam->type = CAMERA;
